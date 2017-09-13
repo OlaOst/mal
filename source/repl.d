@@ -26,6 +26,6 @@ string print(MalType ast)
 
 string rep(string input)
 {
-  import std.string : stripRight;
-  return input.stripRight.read.eval.print;
+  import std.string : strip;
+  return input.strip.read.eval.print;
 }

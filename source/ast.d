@@ -25,7 +25,9 @@ class MalAtom : MalType
   
   this(string name)
   {
-    this.name = name;
+    import std.string : strip;
+    
+    this.name = name.strip;
   }
   
   string print()
