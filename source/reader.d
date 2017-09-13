@@ -1,5 +1,7 @@
 module reader;
 
+import ast;
+
 
 MalType readForm(Reader reader)
 {
