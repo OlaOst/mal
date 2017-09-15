@@ -30,8 +30,15 @@ MalList readList(Reader reader)
 
 MalType readAtom(Reader reader)
 {
+	import std.conv : to;
+	import std.string : isNumeric;
+	
 	auto token = reader.front;
-	return new MalSymbol(token);
+	
+	if (token.isNumeric)
+		return new MalInteger(token.to!int);
+	else
+		return new MalSymbol(token);
 }
 
 class Reader

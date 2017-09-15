@@ -1,9 +1,11 @@
 module ast;
 
+import env;
 
-interface MalType
+
+abstract class MalType
 {
-  MalType eval();
+  MalType eval(Env env);
   string print();
 }
 
@@ -16,7 +18,7 @@ class MalList : MalType
     this.types = types;
   }
   
-  MalType eval()
+  MalType eval(Env env)
   {
     if (types.length == 0)
       return this;
@@ -25,19 +27,12 @@ class MalList : MalType
     import std.array : array;
     import std.exception : enforce;
     
-    auto types = types.map!(type => type.eval).array;
+    auto types = types.map!(type => type.eval(env)).array;
     
-    auto functionName = (cast(MalSymbol)types[0]).name;
+    auto func = (cast(MalFunc)types[0]);
     auto args = types[1..$];
     
-    if (functionName == "+")
-      return builtinAdd(args);
-    else if (functionName == "*")
-      return builtinMul(args);
-    else
-      enforce(false, "Don't know the function " ~ functionName);
-      
-    assert(0);
+    return func.func(args);
   }
   
   string print()
@@ -54,8 +49,8 @@ MalType builtinAdd(MalType[] arguments)
   import std.algorithm : map, sum;
   import std.conv : to;
   
-  auto result = arguments.map!(argument => (cast(MalSymbol)argument).name.to!int).sum.to!string;
-  return new MalSymbol(result);
+  auto result = arguments.map!(argument => (cast(MalInteger)argument)).sum;
+  return new MalInteger(result);
 }
 
 MalType builtinMul(MalType[] arguments)
@@ -63,10 +58,9 @@ MalType builtinMul(MalType[] arguments)
   import std.algorithm : map, reduce, sum;
   import std.conv : to;
   
-  auto result = arguments.map!(argument => (cast(MalSymbol)argument).name.to!int);
-                         .reduce!"a*b".to!string;
+  auto result = arguments.map!(argument => (cast(MalInteger)argument)).reduce!"a*b";
   
-  return new MalSymbol(result);
+  return new MalInteger(result);
 }
 
 class MalSymbol : MalType
@@ -79,13 +73,57 @@ class MalSymbol : MalType
     this.name = name.strip;
   }
   
-  MalType eval()
+  MalType eval(Env env)
+  {
+    return env[name];
+  }
+  
+  string print()
+  {
+    return name;
+  }
+}
+
+class MalInteger : MalType
+{
+  int value;
+  alias value this;
+  
+  this(int value)
+  {
+    this.value = value;
+  }
+  
+  MalType eval(Env env)
   {
     return this;
   }
   
   string print()
   {
-    return name;
+    import std.conv : to;
+    
+    return value.to!string;
+  }
+}
+
+class MalFunc : MalType
+{
+  MalType function(MalType[] arguments) func;
+  
+  this(MalType function(MalType[] arguments) func)
+  {
+    this.func = func;
+  }
+  
+  MalType eval(Env env)
+  {
+    auto arguments = null;
+    return func(arguments);
+  }
+  
+  string print()
+  {
+    return "<func>";
   }
 }

@@ -1,6 +1,7 @@
 module repl;
 
 import ast;
+import env;
 import reader;
 
 
@@ -14,18 +15,13 @@ MalType read(string input)
   return reader.readForm;
 }
 
-MalType eval(MalType ast)
-{
-  return ast;
-}
-
 string print(MalType ast)
 {
   return ast.print;
 }
 
-string rep(string input)
+string rep(string input, Env env)
 {
   import std.string : strip;
-  return input.strip.read.eval.print;
+  return input.strip.read.eval(env).print;
 }
