@@ -33,6 +33,8 @@ struct Tokenizer
     
     auto startLength = input.length;
     
+    enforce(!input.empty);
+    
     if (input.front == '"')
     {
       auto match = input[1..$].findSplitAfter("\"");
@@ -57,7 +59,7 @@ struct Tokenizer
     {
       foreach (index, symbol; input)
       {
-        if (['(', ')', '"', ';'].canFind(symbol))
+        if (['(', ')', '"', ';', ' '].canFind(symbol))
         {
           token = input[0..index];
           input = input[index..$];

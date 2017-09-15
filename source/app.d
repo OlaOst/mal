@@ -6,10 +6,17 @@ import repl;
 void main()
 {
   import std.stdio : readln, write, writeln;
-    
+  
   while (true)
   {
-    "user> ".write;
-    readln.rep.writeln;
+    try
+    {
+      "user> ".write;
+      readln.rep.writeln;
+    }
+    catch (Exception ex)
+    {
+      writeln("EH? ", ex.msg);
+    }
   }
 }

@@ -11,25 +11,27 @@ MalType readForm(Reader reader)
     return reader.readAtom;
 }
 
-MalArray readList(Reader reader)
+MalList readList(Reader reader)
 {
-  MalArray list = new MalArray();
-  
   assert(reader.front == "(");
   reader.popFront(); // pop the '(' token
   
+  MalType[] types;
+  
   while (reader.front != ")")
   {
-    list.types ~= reader.readForm;
+    types ~= reader.readForm;
     reader.popFront();
   }
-  
+ 
+	auto list = new MalList(types);
   return list;
 }
 
-MalAtom readAtom(Reader reader)
+MalType readAtom(Reader reader)
 {
-	return new MalAtom(reader.front);
+	auto token = reader.front;
+	return new MalSymbol(token);
 }
 
 class Reader
@@ -43,20 +45,4 @@ class Reader
   {
     this.tokens = Tokenizer(input);
   }
-  
-  /*bool empty()
-  {
-    return tokens.empty;
-  }
-  
-  string front()
-  {
-    return tokens.front;
-  }
-  
-  void popFront()
-  {
-    tokens.popFront();
-  }*/
 }
-
