@@ -27,10 +27,14 @@ class MalList : MalType
     if (types.length == 0)
       return this;
     
-    //import std.stdio : writeln;
-    //writeln("list eval, types:");
-    //writeln(types.map!(type => typeid(type)));
-    //writeln(types.map!(type => type.print));
+    auto debugMode = "debug" in env;
+    if (debugMode !is null && typeid(*debugMode) == typeid(MalTrue))
+    {
+      import std.stdio : writeln;
+      writeln("list types:", types.map!(type => typeid(type)));
+      writeln("list values: ", types.map!(type => type.print));
+      writeln("env: ", env);
+    }
     
     if (typeid(types[0]) == typeid(MalSymbol))
     {
@@ -60,11 +64,17 @@ class MalList : MalType
         
         foreach (pair; pairs)
         {
-          enforce(typeid(pair[0]) == typeid(MalSymbol), "Every even parameter in let* list must be a symbol");
+          enforce(typeid(pair[0]) == typeid(MalSymbol), "Every even parameter in the let* binding list must be a symbol");
           newEnv[(cast(MalSymbol)pair[0]).name] = pair[1].eval(newEnv);
         }
         
         return types[2].eval(newEnv);
+      }
+      
+      if (symbol.name == "do")
+      {
+        auto types = types[1..$].map!(type => type.eval(env)).array;
+        return types[$-1];
       }
     }
     
