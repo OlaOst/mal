@@ -36,7 +36,13 @@ MalType readAtom(Reader reader)
 	
 	auto token = reader.front;
 	
-	if (token.isNumeric)
+	if (token == "nil")
+		return new MalNil;
+	else if (token == "true")
+		return new MalTrue;
+	else if (token == "false")
+		return new MalFalse;
+	else if (token.isNumeric)
 		return new MalInteger(token.to!int);
 	else if (token[0] == '\"')
 		return new MalString(token.strip('\"'));

@@ -117,6 +117,45 @@ MalType evaluateSelf(MalType[] arguments)
   return arguments[0];
 }
 
+class MalNil : MalType
+{
+  MalType eval(Env env)
+  {
+    return this;
+  }
+  
+  string print()
+  {
+    return "<null>";
+  }
+}
+
+class MalTrue : MalType
+{
+  MalType eval(Env env)
+  {
+    return this;
+  }
+  
+  string print()
+  {
+    return "<true>";
+  }
+}
+
+class MalFalse : MalType
+{
+  MalType eval(Env env)
+  {
+    return this;
+  }
+  
+  string print()
+  {
+    return "<false>";
+  }
+}
+
 class MalSymbol : MalType
 {
   string name;
