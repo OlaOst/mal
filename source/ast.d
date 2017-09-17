@@ -76,6 +76,24 @@ class MalList : MalType
         auto types = types[1..$].map!(type => type.eval(env)).array;
         return types[$-1];
       }
+      
+      if (symbol.name == "if")
+      {
+        enforce(types.length >= 2, "if statement needs at least two parameters: a condition and a true clause, optionally a false clause");
+        auto condition = types[1].eval(env);
+        
+        if (typeid(condition) == typeid(MalNil) || typeid(condition) == typeid(MalFalse))
+        {
+          if (types.length >= 4)
+            return types[3].eval(env);
+          else
+            return new MalNil();
+        }
+        else
+        {
+          return types[2].eval(env);
+        }
+      }
     }
     
     auto types = types.map!(type => type.eval(env)).array;
