@@ -30,6 +30,7 @@ MalList readList(Reader reader)
 
 MalType readAtom(Reader reader)
 {
+	import std.algorithm : strip;
 	import std.conv : to;
 	import std.string : isNumeric;
 	
@@ -37,6 +38,8 @@ MalType readAtom(Reader reader)
 	
 	if (token.isNumeric)
 		return new MalInteger(token.to!int);
+	else if (token[0] == '\"')
+		return new MalString(token.strip('\"'));
 	else
 		return new MalSymbol(token);
 }

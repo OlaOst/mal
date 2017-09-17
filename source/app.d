@@ -22,7 +22,10 @@ void main()
     }
     catch (Exception ex)
     {
-      writeln("EH? ", ex.msg);
+      import std.conv : to;
+      
+      //writeln("EH? ", ex);
+      writeln("EH? ", ex.msg ~ "\n" ~ env.to!string);
     }
   }
 }
