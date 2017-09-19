@@ -24,8 +24,9 @@ void main()
     {
       import std.conv : to;
       
-      //writeln("EH? ", ex);
-      writeln("EH? ", ex.msg ~ "\n" ~ env.to!string);
+      writeln("EH? ", ex);
+      writeln(env);
+      writeln(env.outer);
     }
   }
 }

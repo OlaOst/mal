@@ -94,6 +94,27 @@ class MalList : MalType
           return types[2].eval(env);
         }
       }
+      
+      if (symbol.name == "fn*")
+      {
+        auto closure = new Env(env);
+        
+        enforce(typeid(types[1]) == typeid(MalList), "First parameter to lambda definition must be a list");
+        auto lambdaParameterList = cast(MalList)types[1];
+        auto lambdaBody = types[2];
+        
+        auto func = function(MalType[])
+        {
+          return new MalNil();
+        };
+        
+        closure["fn*"] = new MalFunc(func);
+        
+        import std.stdio : writeln;
+        writeln("closure env: ", closure, " -> ", closure.outer);
+        
+        return types[2].eval(closure);
+      }
     }
     
     auto types = types.map!(type => type.eval(env)).array;
