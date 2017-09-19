@@ -97,27 +97,41 @@ class MalList : MalType
       
       if (symbol.name == "fn*")
       {
-        auto closure = new Env(env);
+        import std.algorithm : all;
         
+        enforce(types.length == 3, "Lambda definition needs two parameters - a parameter list and a function body");
         enforce(typeid(types[1]) == typeid(MalList), "First parameter to lambda definition must be a list");
-        auto lambdaParameterList = cast(MalList)types[1];
-        auto lambdaBody = types[2];
         
-        auto func = function(MalType[])
-        {
-          return new MalNil();
-        };
+        auto argSymbolList = cast(MalList)types[1];
+        auto funcBody = types[2];
         
-        closure["fn*"] = new MalFunc(func);
-        
-        import std.stdio : writeln;
-        writeln("closure env: ", closure, " -> ", closure.outer);
-        
-        return types[2].eval(closure);
+        enforce(argSymbolList.types.all!(argSymbol => typeid(argSymbol) == typeid(MalSymbol)), "Only symbols allowed in lambda parameter list");
+        auto argSymbols = argSymbolList.types.map!(argSymbol => cast(MalSymbol)argSymbol).array;
+                
+        return new MalClosure(argSymbols, funcBody, env);
       }
     }
     
     auto types = types.map!(type => type.eval(env)).array;
+    
+    if (typeid(types[0]) == typeid(MalClosure))
+    {
+      import std.conv : to;
+      
+      auto closure = cast(MalClosure)types[0];
+      auto callEnv = new Env(closure.env);
+      
+      auto params = types[1..$];
+      
+      enforce(params.length == closure.argSymbols.length, "Closure expected " ~ closure.argSymbols.length.to!string ~ " arguments, got " ~ params.length.to!string ~ " params");
+      
+      foreach (index, argSymbol; closure.argSymbols)
+      {
+        callEnv[argSymbol.name] = params[index];
+      }
+
+      return closure.funcBody.eval(callEnv);
+    }
     
     if (typeid(types[0]) == typeid(MalFunc))
     {
@@ -175,7 +189,7 @@ class MalNil : MalType
   
   string print()
   {
-    return "<null>";
+    return "<nil>";
   }
 }
 
@@ -287,5 +301,29 @@ class MalFunc : MalType
   string print()
   {
     return "<func>";
+  }
+}
+
+class MalClosure : MalType
+{
+  MalSymbol[] argSymbols;
+  MalType funcBody;
+  Env env;
+  
+  this(MalSymbol[] argSymbols, MalType funcBody, Env env)
+  {
+    this.argSymbols = argSymbols;
+    this.funcBody = funcBody;
+    this.env = env;
+  }
+  
+  MalType eval(Env env)
+  {
+    return this;
+  }
+  
+  string print()
+  {
+    return "<closure>";
   }
 }

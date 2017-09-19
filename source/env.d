@@ -45,4 +45,14 @@ class Env
       return *match;
     }
   }
+  
+  string print()
+  {
+    import std.conv : to;
+    
+    if (outer !is null)
+      return this.to!string ~ "\n" ~ outer.print;
+    else
+      return this.to!string;
+  }
 }
