@@ -110,6 +110,11 @@ class MalList : MalType
                 
         return new MalClosure(argSymbols, funcBody, env);
       }
+      
+      if (symbol.name == "list")
+      {
+        return new MalList(types[1..$]);
+      }
     }
     
     auto types = types.map!(type => type.eval(env)).array;
@@ -173,11 +178,6 @@ MalType builtinMul(MalType[] arguments)
   auto result = arguments.map!(argument => (cast(MalInteger)argument)).reduce!"a*b";
   
   return new MalInteger(result);
-}
-
-MalType evaluateSelf(MalType[] arguments)
-{
-  return arguments[0];
 }
 
 class MalNil : MalType
