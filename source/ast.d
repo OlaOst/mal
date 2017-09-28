@@ -123,6 +123,16 @@ class MalList : MalType
         enforce(typeid(types[1]) == typeid(MalString), "read-string parameter must be a string");
         return (cast(MalString)types[1]).value.read;
       }
+      
+      if (symbol.name == "slurp")
+      {
+        import std.file : exists, readText;
+        enforce(types.length == 2, "slurp needs exactly 1 parameter");
+        enforce(typeid(types[1]) == typeid(MalString), "slurp parameter must be a string");
+        auto fileName = (cast(MalString)types[1]).value;
+        enforce(fileName.exists);
+        return new MalString(fileName.readText);
+      }
     }
     
     auto types = types.map!(type => type.eval(env)).array;
