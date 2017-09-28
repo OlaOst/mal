@@ -115,6 +115,14 @@ class MalList : MalType
       {
         return new MalList(types[1..$]);
       }
+      
+      if (symbol.name == "read-string")
+      {
+        import repl;
+        enforce(types.length == 2, "read-string needs exactly 1 parameter");
+        enforce(typeid(types[1]) == typeid(MalString), "read-string parameter must be a string");
+        return (cast(MalString)types[1]).value.read;
+      }
     }
     
     auto types = types.map!(type => type.eval(env)).array;
