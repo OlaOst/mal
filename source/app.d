@@ -22,14 +22,17 @@ void main()
   {
     try
     {
+      import core.stdc.errno;
+      
       auto line = linenoise("user> ");
       auto input = line.to!string;
       
-      if (input.length == 0)
-        continue;
-        
+      if (errno == EAGAIN) // linenoise sets errno to EAGAIN on ctrl-c
+        break;
       if (input == "exit")
         break;
+      if (input.length == 0)
+        continue;
       
       line.linenoiseHistoryAdd();
         
