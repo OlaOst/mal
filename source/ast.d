@@ -2,6 +2,7 @@ module ast;
 
 import env;
 import types.malatom;
+import types.malsymbol;
 import types.maltype;
 
 
@@ -192,27 +193,6 @@ MalType builtinMul(MalType[] arguments)
   auto result = arguments.map!(argument => (cast(MalInteger)argument)).reduce!"a*b";
   
   return new MalInteger(result);
-}
-
-class MalSymbol : MalType
-{
-  string name;
-  
-  this(string name)
-  {
-    import std.string : strip;
-    this.name = name.strip;
-  }
-  
-  MalType eval(Env env)
-  {
-    return env[name];
-  }
-  
-  string print()
-  {
-    return name;
-  }
 }
 
 class MalString : MalType
