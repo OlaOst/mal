@@ -1,6 +1,8 @@
 module reader;
 
 import ast;
+import types.malatom;
+import types.maltype;
 
 
 MalType readForm(Reader reader)

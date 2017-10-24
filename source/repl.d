@@ -3,6 +3,7 @@ module repl;
 import ast;
 import env;
 import reader;
+import types.maltype : MalType;
 
 
 MalType read(string input)

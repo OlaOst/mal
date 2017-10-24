@@ -1,13 +1,9 @@
 module ast;
 
 import env;
+import types.malatom;
+import types.maltype;
 
-
-abstract class MalType
-{
-  MalType eval(Env env);
-  string print();
-}
 
 class MalList : MalType
 {
@@ -196,45 +192,6 @@ MalType builtinMul(MalType[] arguments)
   auto result = arguments.map!(argument => (cast(MalInteger)argument)).reduce!"a*b";
   
   return new MalInteger(result);
-}
-
-class MalNil : MalType
-{
-  MalType eval(Env env)
-  {
-    return this;
-  }
-  
-  string print()
-  {
-    return "<nil>";
-  }
-}
-
-class MalTrue : MalType
-{
-  MalType eval(Env env)
-  {
-    return this;
-  }
-  
-  string print()
-  {
-    return "<true>";
-  }
-}
-
-class MalFalse : MalType
-{
-  MalType eval(Env env)
-  {
-    return this;
-  }
-  
-  string print()
-  {
-    return "<false>";
-  }
 }
 
 class MalSymbol : MalType

@@ -1,6 +1,7 @@
 module env;
 
 import ast;
+import types.maltype;
 
 
 class Env
