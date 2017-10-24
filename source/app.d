@@ -40,7 +40,7 @@ void main()
     }
     catch (Exception ex)
     { 
-      writeln("EH? ", ex);
+      writeln("EH? ", ex.msg);
       writeln(env.print);
     }
   }

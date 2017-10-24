@@ -3,6 +3,8 @@ module reader;
 import ast;
 import types.malatom;
 import types.malinteger;
+import types.maldef;
+import types.mallist;
 import types.malstring;
 import types.malsymbol;
 import types.maltype;
@@ -28,7 +30,7 @@ MalList readList(Reader reader)
     types ~= reader.readForm;
     reader.popFront();
   }
- 
+
 	auto list = new MalList(types);
   return list;
 }
@@ -51,7 +53,9 @@ MalType readAtom(Reader reader)
 		return new MalInteger(token.to!int);
 	else if (token[0] == '\"')
 		return new MalString(token.strip('\"'));
-	else
+	else if (token == "def!")
+    return new MalDef(token);
+  else
 		return new MalSymbol(token);
 }
 
