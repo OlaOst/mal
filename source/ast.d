@@ -2,6 +2,7 @@ module ast;
 
 import env;
 import types.malatom;
+import types.malstring;
 import types.malsymbol;
 import types.maltype;
 
@@ -193,26 +194,6 @@ MalType builtinMul(MalType[] arguments)
   auto result = arguments.map!(argument => (cast(MalInteger)argument)).reduce!"a*b";
   
   return new MalInteger(result);
-}
-
-class MalString : MalType
-{
-  string value;
-  
-  this(string value)
-  {
-    this.value = value;
-  }
-  
-  MalType eval(Env env)
-  {
-    return this;
-  }
-  
-  string print()
-  {
-    return value;
-  }
 }
 
 class MalInteger : MalType

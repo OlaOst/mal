@@ -2,6 +2,7 @@ module reader;
 
 import ast;
 import types.malatom;
+import types.malstring;
 import types.malsymbol;
 import types.maltype;
 
