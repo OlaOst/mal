@@ -46,6 +46,8 @@ class MalList : MalType
         return forms.def.eval(items[1..$], noVoidEnv);
       if (symbol.name == "let*")
         return forms.let.eval(items[1..$], noVoidEnv);
+      if (symbol.name == "do")
+        return forms.maldo.eval(items[1..$], noVoidEnv);
       // end of special forms
       
       import std.algorithm : map;
