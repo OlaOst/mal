@@ -1,6 +1,5 @@
 module env;
 
-import ast;
 import types.maltype;
 
 
@@ -51,9 +50,15 @@ class Env
   {
     import std.conv : to;
     
+    string[string] printable;
+    foreach (keyValue; data.byKeyValue)
+    {
+      printable[keyValue.key] = keyValue.value.type;
+    }
+    
     if (outer !is null)
-      return this.to!string ~ "\n" ~ outer.print;
+      return printable.to!string ~ "\n" ~ outer.print;
     else
-      return this.to!string;
+      return printable.to!string;
   }
 }

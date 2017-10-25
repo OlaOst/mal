@@ -5,16 +5,16 @@ import std.stdio : readln, write, writeln;
 
 import deimos.linenoise;
 
-import ast;
 import env;
 import repl;
+import types.malsymbol;
 
 
 void main()
 {  
   auto env = new Env(null);
-  env["+"] = new MalFunc(&builtinAdd);
-  env["*"] = new MalFunc(&builtinMul);
+  env["+"] = new MalSymbol("+");
+  env["*"] = new MalSymbol("*");
   
   linenoiseHistorySetMaxLen(128);
   

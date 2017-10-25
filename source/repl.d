@@ -1,6 +1,5 @@
 module repl;
 
-import ast;
 import env;
 import reader;
 import types.maltype : MalType;
