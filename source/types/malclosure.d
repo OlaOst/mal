@@ -1,16 +1,15 @@
 module types.malclosure;
 
 import env;
+import types.malfunction;
 import types.mallist;
 import types.malsymbol;
 import types.maltype;
 
 
-class MalClosure : MalSymbol
+class MalClosure : MalFunction
 {
   MalSymbol[] binds;
-  MalType functionBody;
-  MalType[] arguments;
   
   this(MalType bindingListType, MalType functionBody)
   {
@@ -24,13 +23,12 @@ class MalClosure : MalSymbol
   
   this(MalType[] binds, MalType functionBody)
   {
-    super("<closure>");
+    super(functionBody);
     
     import std.algorithm : all, map;
     import std.array : array;
     import std.exception : enforce;
     
-    //enforce(binds.all!(bind => typeof(bind) == typeof(MalSymbol)));
     enforce(binds.all!(bind => cast(MalSymbol)bind !is null));
     
     this.binds = binds.map!(bind => cast(MalSymbol)bind).array;

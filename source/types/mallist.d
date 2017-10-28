@@ -2,6 +2,7 @@ module types.mallist;
 
 import env;
 import types.malclosure;
+import types.malfunction;
 import types.malsymbol;
 import types.maltype;
 
@@ -59,6 +60,10 @@ class MalList : MalType
     enforce(evaluatedSymbol !is null, "Expected MalSymbol as first element, got " ~ evaluatedList[0].type);
     auto evaluatedArguments = evaluatedList[1..$];
     
+    auto evaluatedFunction = cast(MalFunction)evaluatedSymbol;
+    if (evaluatedFunction !is null)
+      return evaluatedFunction.apply(evaluatedArguments, env);
+    
     import std.algorithm : all;
     import types.malinteger;
     if (evaluatedSymbol.name == "+")
@@ -74,12 +79,6 @@ class MalList : MalType
       enforce(evaluatedArguments.all!(argument => cast(MalInteger)argument !is null), "All arguments to * must be numbers");
       auto result = evaluatedArguments.map!(argument => (cast(MalInteger)argument)).reduce!"a*b";
       return new MalInteger(result);
-    }
-    if (evaluatedSymbol.name == "<closure>")
-    {
-      auto closure = cast(MalClosure)evaluatedSymbol;
-      closure.arguments = evaluatedArguments;
-      return closure.eval(env);
     }
     
     enforce(false, "Don't know how to evaluate " ~ evaluatedSymbol.name);
