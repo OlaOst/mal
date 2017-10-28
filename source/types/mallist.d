@@ -1,6 +1,7 @@
 module types.mallist;
 
 import env;
+import types.malclosure;
 import types.malsymbol;
 import types.maltype;
 
@@ -30,52 +31,58 @@ class MalList : MalType
     if (items is null || items.length == 0)
       return this;
     
-    import std.exception : enforce;  
-    enforce(cast(MalSymbol)items[0] !is null, "First item of evaluated list must be a MalSymbol, got " ~ items[0].type ~ " instead");
-    
+    // special forms
+    auto specialSymbol = cast(MalSymbol)items[0];
+    if (specialSymbol !is null)
     {
       alias noVoidEnv = env;
       
       import forms.def;
       import forms.let;
       
-      auto symbol = cast(MalSymbol)items[0];
-      
-      // special forms
-      if (symbol.name == "def!")
+      if (specialSymbol.name == "def!")
         return forms.def.eval(items[1..$], noVoidEnv);
-      if (symbol.name == "let*")
+      if (specialSymbol.name == "let*")
         return forms.let.eval(items[1..$], noVoidEnv);
-      if (symbol.name == "do")
+      if (specialSymbol.name == "do")
         return forms.maldo.eval(items[1..$], noVoidEnv);
-      // end of special forms
-      
-      import std.algorithm : map;
-      import std.exception : enforce;
-      
-      auto evaluatedList = items.map!(item => item.eval(noVoidEnv));
-      enforce((cast(MalSymbol)evaluatedList[0]) !is null, "Expected MalSymbol, got " ~ evaluatedList[0].type);
-      auto evaluatedSymbol = cast(MalSymbol)evaluatedList[0];
-      auto evaluatedArguments = evaluatedList[1..$];
-      
-      import std.algorithm : all;
-      import types.malinteger;
-      if (symbol.name == "+")
-      {
-        import std.algorithm : sum;
-        enforce(evaluatedArguments.all!(argument => cast(MalInteger)argument !is null), "All arguments to + must be numbers");
-        auto result = evaluatedArguments.map!(argument => (cast(MalInteger)argument)).sum;
-        return new MalInteger(result);
-      }
-      if (symbol.name == "*")
-      {
-        import std.algorithm : reduce;
-        enforce(evaluatedArguments.all!(argument => cast(MalInteger)argument !is null), "All arguments to * must be numbers");
-        auto result = evaluatedArguments.map!(argument => (cast(MalInteger)argument)).reduce!"a*b";
-        return new MalInteger(result);
-      }
+      if (specialSymbol.name == "fn*")
+        return new MalClosure(items[1], items[2]);
     }
     
+    import std.algorithm : map;
+    import std.array : array;
+    import std.exception : enforce;
+    
+    auto evaluatedList = items.map!(item => item.eval(env)).array;
+    auto evaluatedSymbol = cast(MalSymbol)evaluatedList[0];
+    enforce(evaluatedSymbol !is null, "Expected MalSymbol as first element, got " ~ evaluatedList[0].type);
+    auto evaluatedArguments = evaluatedList[1..$];
+    
+    import std.algorithm : all;
+    import types.malinteger;
+    if (evaluatedSymbol.name == "+")
+    {
+      import std.algorithm : sum;
+      enforce(evaluatedArguments.all!(argument => cast(MalInteger)argument !is null), "All arguments to + must be numbers");
+      auto result = evaluatedArguments.map!(argument => (cast(MalInteger)argument)).sum;
+      return new MalInteger(result);
+    }
+    if (evaluatedSymbol.name == "*")
+    {
+      import std.algorithm : reduce;
+      enforce(evaluatedArguments.all!(argument => cast(MalInteger)argument !is null), "All arguments to * must be numbers");
+      auto result = evaluatedArguments.map!(argument => (cast(MalInteger)argument)).reduce!"a*b";
+      return new MalInteger(result);
+    }
+    if (evaluatedSymbol.name == "<closure>")
+    {
+      auto closure = cast(MalClosure)evaluatedSymbol;
+      closure.arguments = evaluatedArguments;
+      return closure.eval(env);
+    }
+    
+    enforce(false, "Don't know how to evaluate " ~ evaluatedSymbol.name);
     assert(0);
   }
   
