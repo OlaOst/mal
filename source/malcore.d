@@ -16,6 +16,7 @@ Env makeCoreEnv()
   env["*"] = new MalBuiltinFunction(&builtinMul);
   env["print"] = new MalBuiltinFunction(&builtinPrint);
   env["list"] = new MalBuiltinFunction((arguments) => new MalList(arguments));
+  env["list?"] = new MalBuiltinFunction((arguments) => (arguments.length > 0 && typeid(arguments[0]) == typeid(MalList)) ? new MalTrue() : new MalFalse());
   
   return env;
 }
