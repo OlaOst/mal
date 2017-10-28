@@ -29,6 +29,15 @@ Env makeCoreEnv()
     else
       return new MalFalse();
   });
+  env["count"] = new MalBuiltinFunction(function MalType(MalType[] arguments)
+  {
+    import std.exception : enforce;
+    
+    auto list = cast(MalList)arguments[0];
+    enforce(list !is null, "First parameter to count should be a list, not " ~ arguments[0].type);
+    
+    return new MalInteger(cast(int)list.items.length);
+  });
   
   return env;
 }
