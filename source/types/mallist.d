@@ -87,7 +87,8 @@ class MalList : MalType
   
   string print()
   {
-    import std.string : split;
-    return "<" ~ typeid(this).name.split(".")[$-1] ~ ">";
+    import std.algorithm : map;
+    import std.range : join;
+    return "(" ~ items.map!(item => item.print).join(" ") ~ ")";
   }
 }
