@@ -64,23 +64,6 @@ class MalList : MalType
     if (evaluatedFunction !is null)
       return evaluatedFunction.apply(evaluatedArguments, env);
     
-    import std.algorithm : all;
-    import types.malinteger;
-    if (evaluatedSymbol.name == "+")
-    {
-      import std.algorithm : sum;
-      enforce(evaluatedArguments.all!(argument => cast(MalInteger)argument !is null), "All arguments to + must be numbers");
-      auto result = evaluatedArguments.map!(argument => (cast(MalInteger)argument)).sum;
-      return new MalInteger(result);
-    }
-    if (evaluatedSymbol.name == "*")
-    {
-      import std.algorithm : reduce;
-      enforce(evaluatedArguments.all!(argument => cast(MalInteger)argument !is null), "All arguments to * must be numbers");
-      auto result = evaluatedArguments.map!(argument => (cast(MalInteger)argument)).reduce!"a*b";
-      return new MalInteger(result);
-    }
-    
     enforce(false, "Don't know how to evaluate " ~ evaluatedSymbol.name);
     assert(0);
   }
