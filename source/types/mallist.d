@@ -47,6 +47,8 @@ class MalList : MalType
         return forms.let.eval(items[1..$], noVoidEnv);
       if (specialSymbol.name == "do")
         return forms.maldo.eval(items[1..$], noVoidEnv);
+      if (specialSymbol.name == "if")
+        return forms.malif.eval(items[1..$], noVoidEnv);
       if (specialSymbol.name == "fn*")
         return new MalClosure(items[1], items[2]);
     }
