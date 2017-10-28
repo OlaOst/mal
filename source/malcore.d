@@ -41,6 +41,10 @@ Env makeCoreEnv()
     return new MalInteger(cast(int)list.items.length);
   });
   env["="] = new MalBuiltinFunction("=", &builtinEq);
+  env["<"] = new MalBuiltinFunction("<", (arguments) => arguments.ordinalCompare!"<");
+  env[">"] = new MalBuiltinFunction(">", (arguments) => arguments.ordinalCompare!">");
+  env["<="] = new MalBuiltinFunction("<=", (arguments) => arguments.ordinalCompare!"<=");
+  env[">="] = new MalBuiltinFunction(">=", (arguments) => arguments.ordinalCompare!">=");
   
   return env;
 }
@@ -111,4 +115,22 @@ bool checkEquality(MalType[] arguments)
   }
   
   return result;
+}
+
+MalType ordinalCompare(string op)(MalType[] arguments)
+{
+  import std.exception : enforce;
+    
+  enforce(arguments.length >= 2, "Need at least two arguments to compare");
+  auto first = cast(MalInteger)arguments[0];
+  auto other = cast(MalInteger)arguments[1];
+  
+  enforce(first !is null, "Can only compare numbers, not ", arguments[0].type);
+  enforce(other !is null, "Can only compare numbers, not ", arguments[1].type);
+  
+  mixin("auto comparison = (first.value " ~ op ~ " other.value);");
+  if (comparison)
+    return new MalTrue();
+  else
+    return new MalFalse();
 }
