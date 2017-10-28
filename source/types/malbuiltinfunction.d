@@ -11,9 +11,9 @@ class MalBuiltinFunction : MalFunction
 {
   func builtinFunction;
   
-  this(func builtinFunction)
+  this(string name, func builtinFunction)
   {
-    super(this);
+    super(name, this);
     
     this.builtinFunction = builtinFunction;
   }

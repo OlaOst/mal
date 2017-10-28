@@ -13,7 +13,12 @@ class MalFunction : MalSymbol
   
   this(MalType functionBody)
   {
-    super("<function>");
+    this("<function>", functionBody);
+  }
+  
+  this(string name, MalType functionBody)
+  {
+    super(name);
     
     this.functionBody = functionBody;
   }
