@@ -1,9 +1,10 @@
 module malcore;
 
 import env;
+import types.malatom;
 import types.malbuiltinfunction;
 import types.malinteger;
-import types.malatom;
+import types.mallist;
 import types.maltype;
 
 
@@ -14,6 +15,7 @@ Env makeCoreEnv()
   env["+"] = new MalBuiltinFunction(&builtinAdd);
   env["*"] = new MalBuiltinFunction(&builtinMul);
   env["print"] = new MalBuiltinFunction(&builtinPrint);
+  env["list"] = new MalBuiltinFunction((arguments) => new MalList(arguments));
   
   return env;
 }
