@@ -45,6 +45,28 @@ Env makeCoreEnv()
   env[">"] = new MalBuiltinFunction(">", (arguments) => arguments.ordinalCompare!">");
   env["<="] = new MalBuiltinFunction("<=", (arguments) => arguments.ordinalCompare!"<=");
   env[">="] = new MalBuiltinFunction(">=", (arguments) => arguments.ordinalCompare!">=");
+  env["read-string"] = new MalBuiltinFunction("read-string", function MalType(MalType[] arguments)
+  {
+	import std.exception : enforce;
+	import repl : read;
+	
+	auto malString = cast(MalString)arguments[0];
+	enforce(malString !is null, "First parameter to read-string should be a string, not " ~ arguments[0].type);
+	
+	return read(malString);
+  });
+  env["slurp"] = new MalBuiltinFunction("slurp", function MalType(MalType[] arguments)
+  {
+	import std.exception : enforce;
+	import std.file : readText;
+	
+	auto malString = cast(MalString)arguments[0];
+	enforce(malString !is null, "First parameter to slurp should be a string, not " ~ arguments[0].type);
+	
+	auto content = readText(malString.value);
+	
+	return new MalString(content);
+  });
   
   return env;
 }

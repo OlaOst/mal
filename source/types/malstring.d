@@ -6,6 +6,7 @@ import types.malatom;
 class MalString : MalAtom
 {
   string value;
+  alias value this;
   
   this(string value)
   {

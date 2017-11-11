@@ -57,7 +57,7 @@ MalType readAtom(Reader reader)
 
 class Reader
 {
-	import tokenizer;
+  import tokenizer;
 	
   Tokenizer tokens;
   alias tokens this;
