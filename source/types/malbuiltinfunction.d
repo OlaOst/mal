@@ -18,7 +18,7 @@ class MalBuiltinFunction : MalFunction
     this.builtinFunction = builtinFunction;
   }
   
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     return builtinFunction(arguments);
   }

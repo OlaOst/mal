@@ -14,12 +14,12 @@ class MalSymbol : MalType
     this.name = name.strip;
   }
   
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     return env[name];
   }
   
-  string print()
+  override string print()
   {
     return name;
   }

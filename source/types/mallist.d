@@ -16,7 +16,7 @@ class MalList : MalType
     this.items = items;
   }
   
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     auto debugMode = "debug" in env;
     import types.malatom : MalTrue;
@@ -70,7 +70,7 @@ class MalList : MalType
     assert(0);
   }
   
-  string print()
+  override string print()
   {
     import std.algorithm : map;
     import std.range : join;

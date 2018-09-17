@@ -6,12 +6,12 @@ import types.maltype;
 
 class MalAtom : MalType
 {
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     return this;
   }
   
-  string print()
+  override string print()
   {
     import std.string : split;
     return "<" ~ this.classinfo.name.split(".")[$-1] ~ ">";

@@ -29,5 +29,5 @@ class MalFunction : MalSymbol
     return eval(env);
   }
   
-  abstract MalType eval(Env env);
+  abstract override MalType eval(Env env);
 }

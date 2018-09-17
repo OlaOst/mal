@@ -13,7 +13,7 @@ class MalInteger : MalAtom
     this.value = value;
   }
   
-  string print()
+  override string print()
   {
     import std.conv : to;
     return value.to!string;

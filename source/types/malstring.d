@@ -13,7 +13,7 @@ class MalString : MalAtom
     this.value = value;
   }
     
-  string print()
+  override string print()
   {
     return value;
   }

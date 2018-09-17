@@ -35,7 +35,7 @@ class MalClosure : MalFunction
     this.functionBody = functionBody;
   }
   
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     auto newEnv = new Env(env);
     
