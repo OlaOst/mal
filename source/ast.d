@@ -18,7 +18,7 @@ class MalList : MalType
     this.types = types;
   }
   
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     import std.algorithm : map;
     import std.array : array;
@@ -170,7 +170,7 @@ class MalList : MalType
     }
   }
   
-  string print()
+  override string print()
   {
     import std.algorithm : map;
     import std.range : join;
@@ -200,12 +200,12 @@ MalType builtinMul(MalType[] arguments)
 
 class MalNil : MalType
 {
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     return this;
   }
   
-  string print()
+  override string print()
   {
     return "<nil>";
   }
@@ -213,12 +213,12 @@ class MalNil : MalType
 
 class MalTrue : MalType
 {
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     return this;
   }
   
-  string print()
+  override string print()
   {
     return "<true>";
   }
@@ -226,12 +226,12 @@ class MalTrue : MalType
 
 class MalFalse : MalType
 {
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     return this;
   }
   
-  string print()
+  override string print()
   {
     return "<false>";
   }
@@ -247,12 +247,12 @@ class MalSymbol : MalType
     this.name = name.strip;
   }
   
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     return env[name];
   }
   
-  string print()
+  override string print()
   {
     return name;
   }
@@ -267,12 +267,12 @@ class MalString : MalType
     this.value = value;
   }
   
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     return this;
   }
   
-  string print()
+  override string print()
   {
     return value;
   }
@@ -288,12 +288,12 @@ class MalInteger : MalType
     this.value = value;
   }
   
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     return this;
   }
   
-  string print()
+  override string print()
   {
     import std.conv : to;
     
@@ -310,13 +310,13 @@ class MalFunc : MalType
     this.func = func;
   }
   
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     auto arguments = null;
     return func(arguments);
   }
   
-  string print()
+  override string print()
   {
     return "<func>";
   }
@@ -335,12 +335,12 @@ class MalClosure : MalType
     this.env = env;
   }
   
-  MalType eval(Env env)
+  override MalType eval(Env env)
   {
     return this;
   }
   
-  string print()
+  override string print()
   {
     return "<closure>";
   }
