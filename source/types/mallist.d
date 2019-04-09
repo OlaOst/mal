@@ -40,6 +40,8 @@ class MalList : MalType
       
       import forms.def;
       import forms.let;
+      import forms.maldo;
+      import forms.malif;
       
       if (specialSymbol.name == "def!")
         return forms.def.eval(items[1..$], noVoidEnv);
